@@ -1,12 +1,19 @@
 package main
 
 import (
+	"example_http/dbConn"
 	"example_http/handlers"
+	"log"
 	"sync"
 
 	"github.com/gin-gonic/gin"
 )
+
 func main() {
+  err := dbconn.CreateDB()
+  if err != nil {
+    log.Print(err)
+  }
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go setGin(&wg)
@@ -28,18 +35,18 @@ func setGin(wg *sync.WaitGroup) {
 	router.GET("/contacts", func(c *gin.Context) {
 		handlers.GetContacts(c)
 	})
-  router.DELETE("/rm/:id", func(c *gin.Context){
-    userId := c.Param("id")
-    handlers.DeleteContact(c, userId)
-  })
-  router.PATCH("/update/:id", func(c *gin.Context){
-    userId := c.Param("id")
-    handlers.EditUserH(c, userId)
-  })
-  router.GET("/update/:id", func(c *gin.Context){
-    userId := c.Param("id")
-    handlers.EditUser(c, userId)
-  })
+	router.DELETE("/rm/:id", func(c *gin.Context) {
+		userId := c.Param("id")
+		handlers.DeleteContact(c, userId)
+	})
+	router.PATCH("/update/:id", func(c *gin.Context) {
+		userId := c.Param("id")
+		handlers.EditUserH(c, userId)
+	})
+	router.GET("/update/:id", func(c *gin.Context) {
+		userId := c.Param("id")
+		handlers.EditUser(c, userId)
+	})
 	router.Run(":8080")
 
 }

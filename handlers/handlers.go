@@ -21,7 +21,7 @@ func AddUserH(c *gin.Context) {
 	person.LastName = c.Request.FormValue("lastName")
 	person.Email = c.Request.FormValue("email")
 	person.PhoneNumber = c.Request.FormValue("phoneNumber")
-	dbconn.CreateUser(person)
+	go dbconn.CreateUser(person)
 }
 
 func GetContacts(c *gin.Context) {
@@ -32,7 +32,7 @@ func GetContacts(c *gin.Context) {
 }
 
 func DeleteContact(c *gin.Context, id string){
-  dbconn.DeleteUser(id) 
+  go dbconn.DeleteUser(id) 
   c.Redirect(http.StatusMovedPermanently, "/contacts")
 }
 
@@ -44,7 +44,8 @@ func EditUserH(c *gin.Context, id string) {
 	person.Email = c.Request.FormValue("email")
 	person.PhoneNumber = c.Request.FormValue("phoneNumber")
   person.Id,_ = strconv.Atoi(id)
-  dbconn.EditUser(person)
+  go dbconn.EditUser(person)
+  c.Redirect(http.StatusMovedPermanently, "/contacts")
 }
 
 func EditUser(c *gin.Context, id string) {

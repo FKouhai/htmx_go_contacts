@@ -1,27 +1,51 @@
 package dbconn
 
 import (
-	"log"
+	"example_http/config"
 	"github.com/jmoiron/sqlx"
-  "strconv"
 	_ "github.com/lib/pq"
-  "example_http/config"
+  "fmt"
+	"log"
+	"strconv"
 )
 
 type User struct {
-  Id          int `db:"id"`
+	Id          int    `db:"id"`
 	FirstName   string `db:"firstname"`
 	LastName    string `db:"lastname"`
 	Email       string `db:"email"`
 	PhoneNumber string `db:"phonenumber"`
 }
 
+var schema = `
+CREATE TABLE users (
+  id integer AUTO INCREMENT,
+  firstname text,
+  lastname text,
+  email text,
+  phonenumber text
+);
+`
+var connString = "user=" + config.GetConfig().Username + " dbname=" + config.GetConfig().Db + " sslmode=disable password=" + config.GetConfig().Password + " host=" + config.GetConfig().Host
+
+func CreateDB() *sqlx.DB {
+  fmt.Println("Connecting to the DB")
+	db,err := sqlx.Connect("postgres", connString)
+  if err != nil {
+    fmt.Println("THis is the error",err)
+  }
+	db.Exec(schema)
+  err = db.Ping()
+  if err != nil {
+    fmt.Println(err)
+  }
+  return db
+}
+
 func dbConn() *sqlx.DB {
-  connString := "user=" + config.GetConfig().Username + " dbname=" + config.GetConfig().Db + " sslmode=disable password=" + config.GetConfig().Password + " host=" + config.GetConfig().Host
 	db, err := sqlx.Connect("postgres", connString)
 	if err != nil {
-		log.Println(err)
-		dbConn()
+		log.Fatalln(err)
 	}
 
 	return db
@@ -44,27 +68,26 @@ func ListUsers() []User {
 }
 
 func DeleteUser(id string) {
-  db := dbConn()
-  tx := db.MustBegin()
-  tx.MustExec("DELETE FROM users where id = $1", id)
-  tx.Commit()
-  defer db.Close()
+	db := dbConn()
+	tx := db.MustBegin()
+	tx.MustExec("DELETE FROM users where id = $1", id)
+	tx.Commit()
+	defer db.Close()
 }
 
-func EditUser(user *User)  {
-  db := dbConn()
-  tx := db.MustBegin()
-  tx.MustExec("UPDATE users SET firstName = $1,lastName = $2, email = $3, phoneNumber=$4 WHERE id = $5", user.FirstName, user.LastName,user.Email,user.PhoneNumber, user.Id )
-  tx.Commit()
-  defer db.Close()
+func EditUser(user *User) {
+	db := dbConn()
+	tx := db.MustBegin()
+	tx.MustExec("UPDATE users SET firstName = $1,lastName = $2, email = $3, phoneNumber=$4 WHERE id = $5", user.FirstName, user.LastName, user.Email, user.PhoneNumber, user.Id)
+	tx.Commit()
+	defer db.Close()
 }
 
 func SelectUser(id string) User {
-  user := User{}
+	user := User{}
 	db := dbConn()
-  user.Id,_ = strconv.Atoi(id)
+	user.Id, _ = strconv.Atoi(id)
 	db.Get(&user, "SELECT * from users WHERE id = $1", user.Id)
 	defer db.Close()
 	return user
 }
-

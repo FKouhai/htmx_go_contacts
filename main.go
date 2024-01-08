@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	"github.com/zsais/go-gin-prometheus"
 )
 
 func main() {
@@ -22,6 +23,8 @@ func main() {
 
 func setGin(wg *sync.WaitGroup) {
 	router := gin.Default()
+  p := ginprometheus.NewPrometheus("gin")
+  p.Use(router)
 	router.LoadHTMLGlob("/app/html/*.*")
 	router.GET("/", func(c *gin.Context) {
 		handlers.MainH(c)

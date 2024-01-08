@@ -6,12 +6,11 @@ COPY go.mod go.sum ./
 RUN go mod download
 RUN go mod tidy
 ADD . /app
-RUN CGO_ENABLED=0 GOOS=linux go build -o /example_http
+RUN CGO_ENABLED=0 GOOS=linux go build -o /contacts
 #Copies compiled binary and runs the service
 FROM alpine:3.19
 RUN mkdir /app
-COPY --from=build /example_http /app/
-COPY --from=build /app/html /app/html
+COPY --from=build /contacts /app/
 
 EXPOSE 8080
-CMD [ "/app/example_http" ]
+CMD [ "/app/contacts" ]

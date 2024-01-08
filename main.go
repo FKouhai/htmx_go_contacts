@@ -22,7 +22,7 @@ func main() {
 
 func setGin(wg *sync.WaitGroup) {
 	router := gin.Default()
-	router.LoadHTMLGlob("html/*.*")
+	router.LoadHTMLGlob("/app/html/*.*")
 	router.GET("/", func(c *gin.Context) {
 		handlers.MainH(c)
 	})

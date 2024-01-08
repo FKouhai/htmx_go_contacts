@@ -16,3 +16,17 @@ services:
     restart: always
     ports:
       - 8000:8080
+
+  contacts:
+    image: frankyb/contacts
+    build:
+      context: ../
+    ports:
+      - 8080:8080
+    environment:
+      PG_DATABASE: users
+      PG_USERNAME: postgres
+      PG_PASSWORD: example
+      PG_HOST: db
+    volumes:
+      - ../html/:/app/html/:rw

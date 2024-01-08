@@ -22,6 +22,7 @@ func AddUserH(c *gin.Context) {
 	person.Email = c.Request.FormValue("email")
 	person.PhoneNumber = c.Request.FormValue("phoneNumber")
 	go dbconn.CreateUser(person)
+  c.Header("HX-REDIRECT", "/contacts")
 }
 
 func GetContacts(c *gin.Context) {
@@ -33,7 +34,7 @@ func GetContacts(c *gin.Context) {
 
 func DeleteContact(c *gin.Context, id string){
   go dbconn.DeleteUser(id) 
-  c.Redirect(http.StatusMovedPermanently, "/contacts")
+  c.Header("HX-REDIRECT", "/contacts")
 }
 
 
@@ -45,7 +46,7 @@ func EditUserH(c *gin.Context, id string) {
 	person.PhoneNumber = c.Request.FormValue("phoneNumber")
   person.Id,_ = strconv.Atoi(id)
   go dbconn.EditUser(person)
-  c.Redirect(http.StatusMovedPermanently, "/contacts")
+  c.Header("HX-REDIRECT", "/contacts")
 }
 
 func EditUser(c *gin.Context, id string) {

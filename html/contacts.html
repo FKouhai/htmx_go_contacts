@@ -15,7 +15,7 @@
             <ul role="list">
                 <li><a href="/">Home</a></li>
                 <li><a href="/contacts">List Contacts</a></li>
-                <li><a href="/create user">Create Contact</a></li>
+                <li><a href="/createuser">Create Contact</a></li>
             </ul>
         </header>
       <div class="col-4" id="table">
@@ -36,7 +36,7 @@
             <td>{{ .LastName }}</td>
             <td>{{ .Email }}</td>
             <td>{{ .PhoneNumber }}</td>
-            <td> <a hx-delete="/rm/{{ .Id }}" hx-target="#table" hx-swap="outerHTML" href="/rm/{{ .Id }}">delete</a></td>
+            <td> <a hx-delete="/rm/{{ .Id }}" href="/rm/{{ .Id }}">delete</a></td>
             <td> <a href="/update/{{ .Id }}" id="{{ .Id }}">update</a></td> 
             </form>
         </tr>

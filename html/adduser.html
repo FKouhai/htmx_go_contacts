@@ -15,12 +15,12 @@
             <ul role="list">
                 <li><a href="/">Home</a></li>
                 <li><a href="/contacts">List Contacts</a></li>
-                <li><a href="/create user">Create Contact</a></li>
+                <li><a href="/createuser">Create Contact</a></li>
             </ul>
         </header>
         <div class="col-4 fullscreen">
         <main>
-        <form hx-post="/addUser" hx-boost="true" class="table rows">
+        <form hx-post="/addUser" class="table rows"> 
           <p><label for=inp>
                 Name
                 <input id=inp type="text" name="firstName" >

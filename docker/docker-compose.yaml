@@ -30,3 +30,4 @@ services:
       PG_HOST: db
     volumes:
       - ../html/:/app/html/:rw
+    depends_on: db
